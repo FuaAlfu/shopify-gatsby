@@ -15,3 +15,5 @@ export const wrapPageElement = ({ element }) => (
     {element}
   </>
 );
+
+//ssr means: server side render 
