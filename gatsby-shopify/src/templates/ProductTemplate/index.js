@@ -1,10 +1,13 @@
 import React from 'react'
 import  {graphql}  from 'gatsby';
 // we used absolut path here :: look into onCreateWebpackConfig in gatsby-node.js
-import {Layout} from 'components';
+import {Layout, ImageGallery} from 'components';
 import {Grid} from './styles'
 
-
+/*
+to write a fragment:
+...queryName
+*/
 export const query = graphql`
 query ProductQuery($shopifyid: String){
         shopifyProduct(shopifyId: {eq: $shopifyid}) {
@@ -14,7 +17,7 @@ query ProductQuery($shopifyid: String){
       localFile {
         childImageSharp {
           fluid(maxWidth: 300) {
-            src
+            ...GatsbyImageSharpFluid_withWebp
           }
         }
       }
@@ -24,7 +27,7 @@ query ProductQuery($shopifyid: String){
 `;
 
 export default function ProductTemplate(props) {
-    console.log(props);
+   // console.log(props);
         return (
                 <Layout>
                 <Grid>
@@ -35,7 +38,7 @@ export default function ProductTemplate(props) {
                         </p>
                    </div>
                    <div>
-                           Image
+                           <ImageGallery image={props.data.shopifyProduct.images} />
                    </div>
                 </Grid>
                 </Layout>
