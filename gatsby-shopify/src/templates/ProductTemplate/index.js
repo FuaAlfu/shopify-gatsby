@@ -2,7 +2,7 @@ import React from 'react'
 import  {graphql}  from 'gatsby';
 // we used absolut path here :: look into onCreateWebpackConfig in gatsby-node.js
 import {Layout, ImageGallery} from 'components';
-import {Grid} from './styles';
+import {Grid, SelectWrapper} from './styles';
 import CartContext from 'context/CartContext';
 
 /*
@@ -32,11 +32,13 @@ query ProductQuery($shopifyid: String){
 export default function ProductTemplate(props) {
    // console.log(props);
    const {getProductById} = React.useContext(CartContext);
+   const [product, setProduct] = React.useState(null)
    React.useEffect(() =>{
      getProductById(props.data.shopifyProduct.shopifyId).then((result) =>{
-       console.log(result);
+       //console.log(result);
+       setProduct(result);
      })
-   },[getProductById]);
+   },[getProductById, setProduct]);
         return (
                 <Layout>
                 <Grid>
@@ -45,6 +47,18 @@ export default function ProductTemplate(props) {
                         <p>
                             {props.data.shopifyProduct.description}
                         </p>
+                        {product?.availableForSale && (
+                        <>
+                        <SelectWrapper>
+                        <strong>variant</strong>
+                        <select>
+                        {product?.variants.map(v => (
+                          <option key={v.id}>{v.title}</option>
+                          ))}
+                        </select>
+                        </SelectWrapper>
+                        </>
+                        )}
                    </div>
                    <div>
                            <ImageGallery image={props.data.shopifyProduct.images} />
