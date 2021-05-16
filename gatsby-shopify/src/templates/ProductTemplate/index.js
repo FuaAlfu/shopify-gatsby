@@ -6,6 +6,7 @@ import {Layout, ImageGallery} from 'components';
 import {Grid, SelectWrapper, Price} from './styles';
 import {CartContext} from 'context/CartContext';
 import {navigate, useLocatuion} from '@reach/router';
+import queryString from 'query-string';
 
 /*
 to write a fragment:
@@ -38,14 +39,20 @@ export default function ProductTemplate(props) {
    const [selectedVariant, setSelectedVariant] = React.useState(null)
    const {search, origin, pathname} = useLocatuion();
    console.log(search, origin, pathname);
+   const variantId =  queryString.parse(search).variant;
 
    React.useEffect(() =>{
      getProductById(props.data.shopifyProduct.shopifyId).then((result) =>{
        //console.log(result);
        setProduct(result);
-       selectedVariant(result.variants[0]);
+       selectedVariant(result.variants.find(({id}) => id === variantId) || result.variants[0]);
      })
-   },[getProductById, setProduct,props.data.shopifyProduct.shopifyId]);
+   },[
+     getProductById,
+     setProduct,
+     props.data.shopifyProduct.shopifyId,
+     variantId,
+    ]);
 
    const handleVariantChange = (e) =>{
      const newVariant = product?.variant.find(v => v.id === e.target.value);
@@ -62,11 +69,11 @@ export default function ProductTemplate(props) {
                         <p>
                             {props.data.shopifyProduct.description}
                         </p>
-                        {product?.availableForSale && (
+                        {product?.availableForSale && !!selectedVariant && (
                         <>
                         <SelectWrapper>
                         <strong>variant</strong>
-                        <select onChange={handleVariantChange}>
+                        <select value={selectedVariant.id} onChange={handleVariantChange}>
                         {product?.variants.map(v => (
                           <option key={v.id} value={v.id}>
                               {v.title}
