@@ -3,11 +3,19 @@ import Image from 'gatsby-image';
 import {ImageGalleryWrapper} from './style';
 import ImageThumbnail from './ImageThumbnail'
 
-export const ImageGallery = ({images}) => {
+export const ImageGallery = ({selectedVariantImageId, images}) => {
     const [activeImageThumbnail,setActiveImageThumbnail] = React.useState(
        // images[0].localFile.childImageSharp.fluid
-       images[0]
+       images.find(({id}) => id === selectedVariantImageId || images[0])
     );
+    
+    React.useEffect(() => {
+        setActiveImageThumbnail(
+            images.find(({id}) => id === selectedVariantImageId || images[0])
+        )
+    },[selectedVariantImageId, images, setActiveImageThumbnail])
+
+
     const handleClick = (image) =>{
         setActiveImageThumbnail(image);
     };
