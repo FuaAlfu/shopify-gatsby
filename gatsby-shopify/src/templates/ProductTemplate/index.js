@@ -71,6 +71,7 @@ export default function ProductTemplate(props) {
                         </p>
                         {product?.availableForSale && !!selectedVariant && (
                         <>
+                        {product?.variants.length > 1 && (
                         <SelectWrapper>
                         <strong>variant</strong>
                         <select value={selectedVariant.id} onChange={handleVariantChange}>
@@ -81,6 +82,7 @@ export default function ProductTemplate(props) {
                           ))}
                         </select>
                         </SelectWrapper>
+                        )}
                            {!!selectedVariant && <Price>${selectedVariant.price}</Price>}
                         </>
                         )}
